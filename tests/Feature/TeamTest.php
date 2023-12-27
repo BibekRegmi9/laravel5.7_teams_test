@@ -8,15 +8,19 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TeamTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testExample()
-    {
-        $response = $this->get('/');
+    use RefreshDatabase;
 
-        $response->assertStatus(200);
+    public function test_a_user_can_create_a_team(){
+
+        // Given: I am a user who is loggedIn
+        $this->actingAs(factory('App\User')->create());
+
+        // When: When they hit the endpoint / to create a new team
+        $this->post('/teams', [
+            'name' => 'Acme'
+        ]);
+
+        // Then: There should be a new in the database
+        $this->assertDatabaseHas('teams', ['name' => 'Acme']);
     }
 }
